@@ -15,12 +15,15 @@ module.exports = function (reporter) {
 		throw new PluginError('gulp-jscs', 'Invalid reporter');
 	}
 
+    var files = [];
 	// return stream that reports stuff
 	return through.obj(function (file, enc, cb) {
 		if (file.jscs && !file.jscs.success) {
-			rpt([file.jscs.errors]);
+            files.push(file.jscs.errors);
 		}
 
 		cb(null, file);
-	});
+	}, function() {
+        rpt(files);
+    });
 };
